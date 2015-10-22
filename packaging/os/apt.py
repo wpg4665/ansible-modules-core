@@ -53,7 +53,7 @@ options:
     description:
      - Will force purging of configuration files if the module state is set to I(absent).
     required: false
-    default: no
+    default: yes
     choices: [ "yes", "no" ]
   default_release:
     description:
@@ -456,7 +456,7 @@ def install_deb(m, debs, cache, force, install_recommends, dpkg_options):
     else:
         m.exit_json(changed=changed, stdout=retvals.get('stdout',''), stderr=retvals.get('stderr',''))
 
-def remove(m, pkgspec, cache, purge=False,
+def remove(m, pkgspec, cache, purge=True,
            dpkg_options=expand_dpkg_options(DPKG_OPTIONS)):
     pkg_list = []
     pkgspec = expand_pkgspec_from_fnmatches(m, pkgspec, cache)
@@ -543,7 +543,7 @@ def main():
             state = dict(default='present', choices=['installed', 'latest', 'removed', 'absent', 'present', 'build-dep']),
             update_cache = dict(default=False, aliases=['update-cache'], type='bool'),
             cache_valid_time = dict(type='int'),
-            purge = dict(default=False, type='bool'),
+            purge = dict(default=True, type='bool'),
             package = dict(default=None, aliases=['pkg', 'name'], type='list'),
             deb = dict(default=None),
             default_release = dict(default=None, aliases=['default-release']),
